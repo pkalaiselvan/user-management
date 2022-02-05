@@ -1,26 +1,26 @@
 import { getUser as getUserAPI } from '../api'
-export const UserActions = {
-    ADD_USER: 'ADD_USER',
-    REMOVE_USER: 'REMOVE_USER'
-}
+import { UserActions } from '../reducers'
 
-export const addUser = (users) => ({
-    type: UserActions.ADD_MESSAGE,
-    users
+const addUser = (users) => ({
+    type: UserActions.ADD_USER,
+    data: users
+})
+export const setActiveUser = (userId) => ({
+    type: UserActions.SET_ACTIVE_USER,
+    data: userId
 })
 
-export const removeUser = (user) => ({
+export const removeUser = (userId) => ({
     type: UserActions.REMOVE_USER,
-    user
+    data: userId
 })
 
-export const getUser = () => {
-    return (dispatch) => {
-        return getUserAPI().then((response) => {
-            console.log(response)
-            // dispatch(addUser(idx(response, _response => _response)))
-        }).catch((e) => {
-            console.log('error', e)
-        })
+export const getUserList = () => async (dispatch) => {
+    try {
+        const response = await getUserAPI();
+        console.log(response)
+        dispatch(addUser(response.results))
+    } catch (err) {
+        console.log(err);
     }
 }
