@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Box from '@mui/material/Box';
@@ -11,10 +11,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Header from './header'
 import Content from './content'
+import { setActiveUser } from '../actions'
 
 const drawerWidth = 240;
 
-function Main() {
+function Main(props) {
+
+    const selectUser = (userId) => {
+        props.setActiveUser(userId)
+    }
+
+    console.log(props)
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -30,11 +38,11 @@ function Main() {
                 <Toolbar />
                 <Box sx={{ overflow: 'auto' }}>
                     <List>
-                        {['Users'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemText primary={text} />
+                        {(Array.isArray(props.users) && props.users.length) ? props.users.map((user) => (
+                            <ListItem button key={user.login.uuid} onClick={() => selectUser(user.login.uuid)}>
+                                <ListItemText primary={`${user.name.title}. ${user.name.first} ${user.name.last}`} />
                             </ListItem>
-                        ))}
+                        )) : 'No Users'}
                     </List>
                 </Box>
             </Drawer>
@@ -47,13 +55,13 @@ function Main() {
     );
 }
 
-
 const mapStateToProps = state => ({
-
-});
+    users: state.global.users,
+    activeUser: state.global.activeUser,
+})
 
 const mapDispatchToProps = dispatch => ({
-    
+    setActiveUser: bindActionCreators(setActiveUser, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

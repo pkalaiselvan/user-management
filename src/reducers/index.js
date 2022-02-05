@@ -1,16 +1,25 @@
-import { UserActions } from '../actions'
-
+export const UserActions = {
+    ADD_USER: 'ADD_USER',
+    SET_ACTIVE_USER: 'SET_ACTIVE_USER',
+    REMOVE_USER: 'REMOVE_USER'
+}
 const initialState = {
-    users: []
+    users: [],
+    activeUser: ''
 }
 
-export const user = (state = initialState, action) => {
+export const users = (state = initialState, action) => {
     switch (action.type) {
         case UserActions.ADD_USER:
-            return [
+            return {
                 ...state,
-                action.message
-            ]
+                users: action.data
+            }
+        case UserActions.SET_ACTIVE_USER:
+            return {
+                ...state,
+                activeUser: action.data
+            }
         case UserActions.REMOVE_USER:
             return {
                 users: state.users.filter(user => user !== user)
