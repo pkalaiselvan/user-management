@@ -1,27 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import { Box, Drawer, CssBaseline, List, Typography, ListItem, ListItemText, } from '@mui/material';
 import Header from './header'
 import Content from './content'
+import Countdown from './countdown'
 import { setActiveUser } from '../actions'
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 function Main(props) {
 
     const selectUser = (userId) => {
         props.setActiveUser(userId)
     }
-
-    console.log(props)
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -35,12 +27,15 @@ function Main(props) {
                     [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
                 }}
             >
-                <Toolbar />
-                <Box sx={{ overflow: 'auto' }}>
+                <Box sx={{ mt: 8, overflow: 'auto' }}>
                     <List>
                         {(Array.isArray(props.users) && props.users.length) ? props.users.map((user) => (
-                            <ListItem button key={user.login.uuid} onClick={() => selectUser(user.login.uuid)}>
+                            <ListItem
+                                selected={user.login.uuid === props.activeUser}
+                                button
+                                key={user.login.uuid} onClick={() => selectUser(user.login.uuid)}>
                                 <ListItemText primary={`${user.name.title}. ${user.name.first} ${user.name.last}`} />
+                                {user.delete && <Countdown data={user.delete} />}
                             </ListItem>
                         )) : 'No Users'}
                     </List>
